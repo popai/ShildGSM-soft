@@ -197,8 +197,8 @@ void Config(char *nrtel, char *inmsg)
 		{
 			if (CfgCmd(inmsg))
 				gsm.SendSMS(nrtel, "OK");
-			else
-				gsm.SendSMS(nrtel, "EROARE");
+			//else
+				//gsm.SendSMS(nrtel, "EROARE");
 		}
 	}
 }
@@ -215,6 +215,7 @@ void Comand(char *nrtel, char *inmsg)
 	char buffer[24];
 	char OK[3] = "OK";
 
+	Serial.println(inmsg);
 	ReadEprom(buffer, 18 * 4);
 	if (strcasecmp(buffer, inmsg) == 0)
 	{

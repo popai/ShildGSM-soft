@@ -100,7 +100,7 @@ void loop()
 				sms_rx[i] = (Serial.read()); //read data
 				i++;
 			}
-			sms_rx[i] = 0;
+			sms_rx[i - 1] = 0;
 
 			delay(5);
 			Serial.println(sms_rx);

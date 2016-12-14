@@ -82,7 +82,7 @@
 #define outD3		4
 #define outD4		5
 #define outD5		6
-#define outD5		7
+#define outD6		7
 
 #define inD1		9
 #define inD2		10

@@ -23,10 +23,22 @@ void pinSetUp()
 {
 	//output pins
 	pinMode(outD1, OUTPUT);
+	digitalWrite(outD1, HIGH);
+
 	pinMode(outD2, OUTPUT);
+	digitalWrite(outD2, HIGH);
+
 	pinMode(outD3, OUTPUT);
+	digitalWrite(outD3, HIGH);
+
 	pinMode(outD4, OUTPUT);
+	digitalWrite(outD4, HIGH);
+
 	pinMode(outD5, OUTPUT);
+	digitalWrite(outD5, HIGH);
+
+	pinMode(errLED, OUTPUT);
+	pinMode(useLED, OUTPUT);
 
 	//input pin
 	pinMode(inD1, INPUT);

@@ -48,7 +48,7 @@ void setup()
 		strcpy_P(sms_rx, PSTR("Comanda ne scrisa"));
 		eeprom_write_block(sms_rx, (int*) 486, 24);
 		//eeprom_update_block(sms_rx, (int*) 486, 24);
-		strcpy(sms_rx, 0x00);
+		strcpy_P(sms_rx, 0x00);
 	}
 
 	//Check status
@@ -60,19 +60,19 @@ void setup()
 		gsm.Echo(0);		//enable/disable AT echo
 		Serial.println(F("GSM OK"));
 		//error=gsm.SendSMS("+40745183841","Modul ON");
+		uint8_t nr_pfonnr = 0;	//hold number of phone number on sim
+		for (byte i = 1; i < 7; i++)
+			if (gsm.GetPhoneNumber(i, number) == 1)  //Find number in specified position
+				++nr_pfonnr;
+
+		Serial.println(nr_pfonnr);
+
 	}
 	else
 	{
 		Serial.println(F("GSM init error"));
 		digitalWrite(errLED, HIGH);			//ERROR LED on
 	}
-
-	uint8_t nr_pfonnr = 0;	//hold number of phone number on sim
-	for (byte i = 1; i < 7; i++)
-		if (gsm.GetPhoneNumber(i, number) == 1)  //Find number in specified position
-			++nr_pfonnr;
-
-	Serial.println(nr_pfonnr);
 
 	//if (nr_pfonnr == 0)
 	//MIXP |= (1 << errLED);
@@ -104,7 +104,7 @@ void loop()
 
 			delay(5);
 			Serial.println(sms_rx);
-			if (strstr(sms_rx, "citeste") != 0)
+			if (strstr_P(sms_rx, PSTR("citeste")) != 0)
 			{
 				for (int i = 0; i <= 512; i += 18)
 					ReadEprom(sms_rx, i);
@@ -213,7 +213,7 @@ void loop()
 int Check_SMS()
 {
 	int error = 0;			//error from function
-	char str[200];
+	//char str[200];
 	int pos_sms_rx = -1;  //Received SMS position
 	pos_sms_rx = gsm.IsSMSPresent(SMS_ALL);
 	//Serial.println(pos_sms_rx);

@@ -60,10 +60,9 @@ const char STARE_TMP[] PROGMEM = "STARE TMP";	//predefined command
 const char STARE_ALL[] PROGMEM = "STARE ALL";	//predefined command
 
 // The table to refer to my strings.
-const char *comenzi[] =
-{ IN1, IN2, IN3, OUT1L, OUT1H, OUT1P, OUT2L, OUT2H, OUT2P, OUT3L, OUT3H, OUT3P,
-		OUT4L, OUT4H, OUT4P, OUT5L, OUT5H, OUT5P, OUT6L, OUT6H, OUT6P, TMP1,
-		TMP2, PASS };
+const char *comenzi[] = { IN1, IN2, IN3, OUT1L, OUT1H, OUT1P, OUT2L, OUT2H,
+		OUT2P, OUT3L, OUT3H, OUT3P, OUT4L, OUT4H, OUT4P, OUT5L, OUT5H, OUT5P,
+		OUT6L, OUT6H, OUT6P, TMP1, TMP2, PASS };
 
 //read data from eeprom on specified adres
 void ReadEprom(char* str_citit, int const address)
@@ -178,6 +177,7 @@ void Config(char *nrtel, char *inmsg)
 				if (gsm.ComparePhoneNumber(i, nrtel) == 1)
 					break;
 			if (i < 7)
+			{
 				if (0 != gsm.DelPhoneNumber(i))
 				{
 					strcpy_P(buffer, PSTR("Sters"));
@@ -188,7 +188,7 @@ void Config(char *nrtel, char *inmsg)
 					strcpy_P(buffer, PSTR("Ne Sters"));
 					gsm.SendSMS(nrtel, buffer);
 				}
-
+			}
 		}
 		//delete EEPROM of microcontroller
 		else if (strstr_P(inmsg, DELEP) != 0)
@@ -196,7 +196,7 @@ void Config(char *nrtel, char *inmsg)
 		else
 		{
 			if (CfgCmd(inmsg))
-				gsm.SendSMS(nrtel, "OK");
+				gsm.SendSMS(nrtel, (char*) "OK");
 			//else
 				//gsm.SendSMS(nrtel, "EROARE");
 		}
@@ -593,6 +593,7 @@ void static StareIN(char *nrtel)
 	sprintf(mesage, " U = %d \n", Vo);
 	ReadEprom(buffer, 18 * 1);
 	if (strlen(buffer) != 0)
+	{
 		if (digitalRead(inD1) == LOW)
 		{
 			{
@@ -608,9 +609,11 @@ void static StareIN(char *nrtel)
 			strcat_P(mesage, PSTR(" off"));
 			strcat_P(mesage, PSTR("\r\n"));
 		}
-
+	}
+//if (digitalRead(inD2) == LOW && in2)
 	ReadEprom(buffer, 18 * 2);
 	if (strlen(buffer) != 0)
+	{
 		if (digitalRead(inD2) == LOW)
 		{
 			{
@@ -626,9 +629,10 @@ void static StareIN(char *nrtel)
 			strcat_P(mesage, PSTR(" off"));
 			strcat_P(mesage, PSTR("\r\n"));
 		}
-
+	}
 	ReadEprom(buffer, 18 * 3);
 	if (strlen(buffer) != 0)
+	{
 		if (digitalRead(inD3) == LOW)
 		{
 			{
@@ -644,6 +648,7 @@ void static StareIN(char *nrtel)
 			strcat_P(mesage, PSTR(" off"));
 			//strcat_P(mesage, PSTR("\r\n"));
 		}
+	}
 	if (strlen(mesage) != 0)
 		gsm.SendSMS(nrtel, mesage);
 
@@ -827,7 +832,7 @@ void VerificIN()
 	}
 
 	int Vo = 0;
-	Vo = (20 * analogRead(senzorV) / 1023);
+	Vo = (15 * analogRead(senzorV) / 1023);
 	sprintf(buffer, " Alerta: U = %d", Vo);
 	if (Vo >= 15 || Vo <= 11)
 	{

@@ -136,6 +136,7 @@ void loop()
 	else
 	{
 		VerificIN();
+		VerificOUT();
 		id = Check_SMS();
 		//Serial.println(id);
 		if (id == GETSMS_AUTH_SMS)
@@ -195,7 +196,7 @@ void loop()
 	wdt_reset();
 
 	//test SIM900 module up
-	if (AT_RESP_OK == gsm.SendATCmdWaitResp("AT", 500, 100, "OK", 5))
+	if (AT_RESP_OK == gsm.SendATCmdWaitResp("AT", 500, 100, "OK", 3))
 		digitalWrite(errLED, LOW);			//ERROR LED off
 	else digitalWrite(errLED, HIGH);		//ERROR LED on
 

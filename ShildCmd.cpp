@@ -19,6 +19,11 @@
 #include "ShildPinDef.h"
 //#include <math.h>
 
+unsigned long time_D[6] = {0, 0, 0, 0, 0, 0};
+
+unsigned long time_base = 7200000; //1000 * 60 * 60 * 2 ;	//time 2h
+
+
 GSM gsm;			//gsm handler class
 
 //Function prototypes
@@ -220,6 +225,7 @@ void Comand(char *nrtel, char *inmsg)
 	if (strcasecmp(buffer, inmsg) == 0)
 	{
 		digitalWrite(outD1, LOW);
+		time_D[0] = millis();
 		gsm.SendSMS(nrtel, OK);
 		return;
 	}
@@ -246,6 +252,7 @@ void Comand(char *nrtel, char *inmsg)
 	if (strcasecmp(buffer, inmsg) == 0)
 	{
 		digitalWrite(outD2, LOW);
+		time_D[1] = millis();
 		gsm.SendSMS(nrtel, OK);
 		return;
 	}
@@ -272,6 +279,7 @@ void Comand(char *nrtel, char *inmsg)
 	if (strcasecmp(buffer, inmsg) == 0)
 	{
 		digitalWrite(outD3, LOW);
+		time_D[2] = millis();
 		gsm.SendSMS(nrtel, OK);
 		return;
 	}
@@ -298,6 +306,7 @@ void Comand(char *nrtel, char *inmsg)
 	if (strcasecmp(buffer, inmsg) == 0)
 	{
 		digitalWrite(outD4, LOW);
+		time_D[3] = millis();
 		gsm.SendSMS(nrtel, OK);
 		return;
 	}
@@ -324,6 +333,7 @@ void Comand(char *nrtel, char *inmsg)
 	if (strcasecmp(buffer, inmsg) == 0)
 	{
 		digitalWrite(outD5, LOW);
+		time_D[4] = millis();
 		gsm.SendSMS(nrtel, OK);
 		return;
 	}
@@ -353,6 +363,7 @@ void Comand(char *nrtel, char *inmsg)
 		PORTD &= ~(1 << PIND7);
 		//pin_state |= (1 << PIND7);
 		//eeprom_write_byte((uint8_t*) 396, pin_state);
+		time_D[5] = millis();
 		gsm.SendSMS(nrtel, OK);
 		return;
 	}
@@ -847,4 +858,17 @@ void VerificIN()
 	}
 	else
 		sms_sent = true;
+}
+
+void VerificOUT()
+{
+
+	for(int8_t port = 2; port < 8; port++)
+	{
+		if (digitalRead(port) == LOW)
+		{
+			if((millis() - time_D[port - 2]) > time_base)
+				digitalWrite(port, HIGH);
+		}
+	}
 }

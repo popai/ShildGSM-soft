@@ -19,10 +19,9 @@
 #include "ShildPinDef.h"
 //#include <math.h>
 
-unsigned long time_D[6] = {0, 0, 0, 0, 0, 0};
+unsigned long time_D[6] = { 0, 0, 0, 0, 0, 0 };
 
 unsigned long time_base = 7200000; //1000 * 60 * 60 * 2 ;	//time 2h
-
 
 GSM gsm;			//gsm handler class
 
@@ -203,7 +202,7 @@ void Config(char *nrtel, char *inmsg)
 			if (CfgCmd(inmsg))
 				gsm.SendSMS(nrtel, (char*) "OK");
 			//else
-				//gsm.SendSMS(nrtel, "EROARE");
+			//gsm.SendSMS(nrtel, "EROARE");
 		}
 	}
 }
@@ -221,177 +220,43 @@ void Comand(char *nrtel, char *inmsg)
 	char OK[3] = "OK";
 
 	Serial.println(inmsg);
-	ReadEprom(buffer, 18 * 4);
-	if (strcasecmp(buffer, inmsg) == 0)
+	for (int i = outD1, j = 4; i < 8 && j < 20; i++, j += 3)
 	{
-		digitalWrite(outD1, LOW);
-		time_D[0] = millis();
-		gsm.SendSMS(nrtel, OK);
-		return;
+		ReadEprom(buffer, 18 * j);
+		if (strcasecmp(buffer, inmsg) == 0)
+		{
+			digitalWrite(i, LOW);
+			time_D[0] = millis();
+			gsm.SendSMS(nrtel, OK);
+			return;
+		}
 	}
 
-	ReadEprom(buffer, 18 * 5);
-	if (strcasecmp(buffer, inmsg) == 0)
+	for (int i = 2, j = 5; i < 8 && j < 21; i++, j += 3)
 	{
-		digitalWrite(outD1, HIGH);
-		gsm.SendSMS(nrtel, OK);
-		return;
+
+		ReadEprom(buffer, 18 * j);
+		if (strcasecmp(buffer, inmsg) == 0)
+		{
+			digitalWrite(i, HIGH);
+			gsm.SendSMS(nrtel, OK);
+			return;
+		}
 	}
 
-	ReadEprom(buffer, 18 * 6);
-	if (strcasecmp(buffer, inmsg) == 0)
+	for (int i = 2, j = 6; i < 8 && j < 22; i++, j += 3)
 	{
-		digitalWrite(outD1, HIGH);
-		delay(1000);
-		digitalWrite(outD1, LOW);
-		gsm.SendSMS(nrtel, OK);
-		return;
+		ReadEprom(buffer, 18 * j);
+		if (strcasecmp(buffer, inmsg) == 0)
+		{
+			digitalWrite(i, LOW);
+			delay(1000);
+			digitalWrite(i, HIGH);
+			gsm.SendSMS(nrtel, OK);
+			return;
+		}
 	}
 
-	ReadEprom(buffer, 18 * 7);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		digitalWrite(outD2, LOW);
-		time_D[1] = millis();
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-
-	ReadEprom(buffer, 18 * 8);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		digitalWrite(outD2, HIGH);
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-
-	ReadEprom(buffer, 18 * 9);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		digitalWrite(outD2, HIGH);
-		delay(1000);
-		digitalWrite(outD2, LOW);
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-
-	ReadEprom(buffer, 18 * 10);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		digitalWrite(outD3, LOW);
-		time_D[2] = millis();
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-
-	ReadEprom(buffer, 18 * 11);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		digitalWrite(outD3, HIGH);
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-
-	ReadEprom(buffer, 18 * 12);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		digitalWrite(outD3, HIGH);
-		delay(1000);
-		digitalWrite(outD3, LOW);
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-
-	ReadEprom(buffer, 18 * 13);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		digitalWrite(outD4, LOW);
-		time_D[3] = millis();
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-
-	ReadEprom(buffer, 18 * 14);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		digitalWrite(outD4, HIGH);
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-
-	ReadEprom(buffer, 18 * 15);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		digitalWrite(outD4, HIGH);
-		delay(1000);
-		digitalWrite(outD4, LOW);
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-
-	ReadEprom(buffer, 18 * 16);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		digitalWrite(outD5, LOW);
-		time_D[4] = millis();
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-
-	ReadEprom(buffer, 18 * 17);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		digitalWrite(outD5, HIGH);
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-
-	ReadEprom(buffer, 18 * 18);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		digitalWrite(outD5, HIGH);
-		delay(1000);
-		digitalWrite(outD5, LOW);
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-#if defined(__AVR_ATmega328P__)
-	ReadEprom(buffer, 18 * 19);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		//digitalWrite(outD5, LOW);
-		PORTD &= ~(1 << PIND7);
-		//pin_state |= (1 << PIND7);
-		//eeprom_write_byte((uint8_t*) 396, pin_state);
-		time_D[5] = millis();
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-
-	ReadEprom(buffer, 18 * 20);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		//digitalWrite(outD5, HIGH);
-		PORTD |= (1 << PIND7);
-		//pin_state |= (1 << PIND7);
-		//eeprom_write_byte((uint8_t*) 396, pin_state);
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-
-	ReadEprom(buffer, 18 * 21);
-	if (strcasecmp(buffer, inmsg) == 0)
-	{
-		//digitalWrite(outD1, HIGH);
-		PORTD |= (1 << PIND7);
-		delay(1000);
-		PORTD &= ~(1 << PIND7);
-		////pin_state |= (1 << PIND2);
-		////eeprom_write_byte((uint8_t*) 396, pin_state);
-		gsm.SendSMS(nrtel, OK);
-		return;
-	}
-#endif
 	if (strcasecmp_P(inmsg, STARE_IN) == 0)
 	{
 		StareIN(nrtel);
@@ -413,8 +278,6 @@ void Comand(char *nrtel, char *inmsg)
 		return;
 	}
 
-	//strcpy_P(buffer, (char*) pgm_read_word(&(comenzi[20])));
-	//if (strcasecmp(buffer, inmsg) == 0)
 	if (strcasecmp_P(inmsg, STARE_ALL) == 0)
 	{
 		StareIN(nrtel);
@@ -448,6 +311,7 @@ void Comand(char *nrtel, char *inmsg)
 	gsm.SendSMS(nrtel, buffer);
 	Serial.println(buffer);
 	return;
+
 
 }
 
@@ -863,12 +727,252 @@ void VerificIN()
 void VerificOUT()
 {
 
-	for(int8_t port = 2; port < 8; port++)
+	for (int8_t port = 2; port < 8; port++)
 	{
 		if (digitalRead(port) == LOW)
 		{
-			if((millis() - time_D[port - 2]) > time_base)
+			if ((millis() - time_D[port - 2]) > time_base)
 				digitalWrite(port, HIGH);
 		}
 	}
 }
+
+
+/*
+ void Comand(char *nrtel, char *inmsg)
+{
+	char buffer[24];
+	char OK[3] = "OK";
+
+	Serial.println(inmsg);
+	ReadEprom(buffer, 18 * 4);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD1, LOW);
+		time_D[0] = millis();
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 5);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD1, HIGH);
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 6);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD1, HIGH);
+		delay(1000);
+		digitalWrite(outD1, LOW);
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 7);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD2, LOW);
+		time_D[1] = millis();
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 8);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD2, HIGH);
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 9);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD2, HIGH);
+		delay(1000);
+		digitalWrite(outD2, LOW);
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 10);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD3, LOW);
+		time_D[2] = millis();
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 11);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD3, HIGH);
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 12);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD3, HIGH);
+		delay(1000);
+		digitalWrite(outD3, LOW);
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 13);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD4, LOW);
+		time_D[3] = millis();
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 14);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD4, HIGH);
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 15);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD4, HIGH);
+		delay(1000);
+		digitalWrite(outD4, LOW);
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 16);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD5, LOW);
+		time_D[4] = millis();
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 17);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD5, HIGH);
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 18);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		digitalWrite(outD5, HIGH);
+		delay(1000);
+		digitalWrite(outD5, LOW);
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+#if defined(__AVR_ATmega328P__)
+	ReadEprom(buffer, 18 * 19);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		//digitalWrite(outD5, LOW);
+		PORTD &= ~(1 << PIND7);
+		//pin_state |= (1 << PIND7);
+		//eeprom_write_byte((uint8_t*) 396, pin_state);
+		time_D[5] = millis();
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 20);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		//digitalWrite(outD5, HIGH);
+		PORTD |= (1 << PIND7);
+		//pin_state |= (1 << PIND7);
+		//eeprom_write_byte((uint8_t*) 396, pin_state);
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+
+	ReadEprom(buffer, 18 * 21);
+	if (strcasecmp(buffer, inmsg) == 0)
+	{
+		//digitalWrite(outD1, HIGH);
+		PORTD |= (1 << PIND7);
+		delay(1000);
+		PORTD &= ~(1 << PIND7);
+		////pin_state |= (1 << PIND2);
+		////eeprom_write_byte((uint8_t*) 396, pin_state);
+		gsm.SendSMS(nrtel, OK);
+		return;
+	}
+#endif
+	if (strcasecmp_P(inmsg, STARE_IN) == 0)
+	{
+		StareIN(nrtel);
+		return;
+	}
+
+	//strcpy_P(buffer, (char*) pgm_read_word(&(comenzi[18])));
+	//if (strcasecmp(buffer, inmsg) == 0)
+	if (strcasecmp_P(inmsg, STARE_OUT) == 0)
+	{
+		StareOUT(nrtel);
+		return;
+	}
+	//strcpy_P(buffer, (char*) pgm_read_word(&(comenzi[19])));
+	//if (strcasecmp(buffer, inmsg) == 0)
+	if (strcasecmp_P(inmsg, STARE_TMP) == 0)
+	{
+		StareTMP(nrtel);
+		return;
+	}
+
+	//strcpy_P(buffer, (char*) pgm_read_word(&(comenzi[20])));
+	//if (strcasecmp(buffer, inmsg) == 0)
+	if (strcasecmp_P(inmsg, STARE_ALL) == 0)
+	{
+		StareIN(nrtel);
+		StareOUT(nrtel);
+		StareTMP(nrtel);
+		return;
+	}
+
+	if (strcasecmp_P(inmsg, DEL) == 0)
+	{
+		byte i = 1;
+		for (i = 1; i < 7; i++)
+			if (gsm.ComparePhoneNumber(i, nrtel))
+				break;
+		if (i < 7 && 0 != gsm.DelPhoneNumber(i))
+		{
+			strcpy_P(buffer, PSTR("Sters"));
+			Serial.print(buffer);
+			gsm.SendSMS(nrtel, buffer);
+		}
+		else
+		{
+			strcpy_P(buffer, PSTR("Ne Sters"));
+			Serial.print(buffer);
+			gsm.SendSMS(nrtel, buffer);
+		}
+		return;
+	}
+
+	ReadEprom(buffer, 486);
+	gsm.SendSMS(nrtel, buffer);
+	Serial.println(buffer);
+	return;
+
+}
+
+ */

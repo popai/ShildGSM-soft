@@ -62,7 +62,7 @@ void setup()
 		//error=gsm.SendSMS("+40745183841","Modul ON");
 		uint8_t nr_pfonnr = 0;	//hold number of phone number on sim
 		for (byte i = 1; i < 7; i++)
-			if (gsm.GetPhoneNumber(i, number) == 1)  //Find number in specified position
+			if (gsm.GetPhoneNumber(i, number) == 1) //Find number in specified position
 				++nr_pfonnr;
 
 		Serial.println(nr_pfonnr);
@@ -78,7 +78,7 @@ void setup()
 	//MIXP |= (1 << errLED);
 	//pinMode(A5, INPUT);
 	if (digitalRead(JPCFG) == LOW)
-	//if ((INPP & (1 << JPCFG)) == 0)
+		//if ((INPP & (1 << JPCFG)) == 0)
 		config = true;
 
 	wdt_enable(WDTO_8S);
@@ -92,6 +92,7 @@ void loop()
 
 	if (config)
 	{
+		VerificOUT();
 		wdt_disable();
 		if (Serial.available() > 0)
 		{
@@ -109,11 +110,14 @@ void loop()
 				for (int i = 0; i <= 512; i += 18)
 					ReadEprom(sms_rx, i);
 			}
-			else if(strstr(sms_rx, "DELEP") != 0)
+			else if (strstr(sms_rx, "DELEP") != 0)
 				DellEprom();
 			else if (strlen(sms_rx) != 0)
+			{
 				if (!CfgCmd(sms_rx))
-					Serial.println("error");
+				//Serial.println("error");
+					Comand(NULL, sms_rx);
+			}
 			*sms_rx = 0x00;
 		}
 
@@ -126,9 +130,10 @@ void loop()
 			id = 0;
 		}
 		//test SIM900 module up
-		if (AT_RESP_OK == gsm.SendATCmdWaitResp("AT", 500, 100, "OK", 5))
+		if (AT_RESP_OK == gsm.SendATCmdWaitResp("AT", 500, 100, "OK", 1))
 			digitalWrite(errLED, LOW);			//ERROR LED off
-		else digitalWrite(errLED, HIGH);		//ERROR LED on
+		else
+			digitalWrite(errLED, HIGH);		//ERROR LED on
 
 		//XXX feeding the dog
 		//wdt_reset();
@@ -196,9 +201,10 @@ void loop()
 	wdt_reset();
 
 	//test SIM900 module up
-	if (AT_RESP_OK == gsm.SendATCmdWaitResp("AT", 500, 100, "OK", 3))
+	if (AT_RESP_OK == gsm.SendATCmdWaitResp("AT", 500, 100, "OK", 1))
 		digitalWrite(errLED, LOW);			//ERROR LED off
-	else digitalWrite(errLED, HIGH);		//ERROR LED on
+	else
+		digitalWrite(errLED, HIGH);		//ERROR LED on
 
 	delay(50);
 }

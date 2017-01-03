@@ -37,6 +37,9 @@ void pinSetUp()
 	pinMode(outD5, OUTPUT);
 	digitalWrite(outD5, HIGH);
 
+	pinMode(outD6, OUTPUT);
+	digitalWrite(outD6, HIGH);
+
 	pinMode(errLED, OUTPUT);
 	pinMode(useLED, OUTPUT);
 

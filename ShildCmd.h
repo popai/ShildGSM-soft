@@ -18,6 +18,7 @@ void Comand(char *nrtel, char *inmsg);
 float Thermistor(int RawADC);
 void VerificIN();
 void VerificOUT();
+bool ToffSet();
 //void SetPort();
 
 #endif /* SHILDCMD_H_ */

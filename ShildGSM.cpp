@@ -21,6 +21,7 @@ char number[20];	//sender phone number
 //uint8_t nr_pfonnr = 0;	//hold number of phone number on sim
 
 bool config = false; //, delEEPROM = false;	//define state of controller
+bool time_off = false;
 
 int Check_SMS();  //Check if there is SMS
 
@@ -81,6 +82,8 @@ void setup()
 		//if ((INPP & (1 << JPCFG)) == 0)
 		config = true;
 
+	time_off = ToffSet();
+
 	wdt_enable(WDTO_8S);
 }
 
@@ -92,8 +95,10 @@ void loop()
 
 	if (config)
 	{
-		VerificOUT();
+		if (time_off)
+			VerificOUT();
 		wdt_disable();
+		Serial.flush();
 		if (Serial.available() > 0)
 		{
 			while (Serial.available() > 0)
@@ -115,7 +120,7 @@ void loop()
 			else if (strlen(sms_rx) != 0)
 			{
 				if (!CfgCmd(sms_rx))
-				//Serial.println("error");
+					//Serial.println("error");
 					Comand(NULL, sms_rx);
 			}
 			*sms_rx = 0x00;
@@ -141,7 +146,8 @@ void loop()
 	else
 	{
 		VerificIN();
-		VerificOUT();
+		if (time_off)
+			VerificOUT();
 		id = Check_SMS();
 		//Serial.println(id);
 		if (id == GETSMS_AUTH_SMS)

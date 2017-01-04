@@ -19,7 +19,8 @@
 #include "ShildPinDef.h"
 //#include <math.h>
 
-unsigned long time_D[6] = { 0, 0, 0, 0, 0, 0 };
+unsigned long time_D[6] =
+{ 0, 0, 0, 0, 0, 0 };
 
 unsigned long time_base = 3600000 * 2; //7200000; //1000 * 60 * 60 * 2 ;	//time 2h
 
@@ -66,11 +67,12 @@ const char STARE_ALL[] PROGMEM = "STARE ALL";	//predefined command
 const char ALL_OFF[] PROGMEM = "ALLOFF";	//predefined command
 //const char H0_OFF[] PROGMEM = "0HOFF";	//predefined command
 const char H2_OFF[] PROGMEM = "2h";	//predefined command
-const char H24_OFF[] PROGMEM = "24h";	//predefined command
+const char H12_OFF[] PROGMEM = "12h";	//predefined command
 // The table to refer to my strings.
-const char *comenzi[] = { IN1, IN2, IN3, OUT1L, OUT1H, OUT1P, OUT2L, OUT2H,
-		OUT2P, OUT3L, OUT3H, OUT3P, OUT4L, OUT4H, OUT4P, OUT5L, OUT5H, OUT5P,
-		OUT6L, OUT6H, OUT6P, TMP1, TMP2, PASS, TIMEOFF };
+const char *comenzi[] =
+{ IN1, IN2, IN3, OUT1L, OUT1H, OUT1P, OUT2L, OUT2H, OUT2P, OUT3L, OUT3H, OUT3P,
+		OUT4L, OUT4H, OUT4P, OUT5L, OUT5H, OUT5P, OUT6L, OUT6H, OUT6P, TMP1,
+		TMP2, PASS, TIMEOFF };
 
 //read data from eeprom on specified adres
 void ReadEprom(char* str_citit, int const address)
@@ -103,24 +105,34 @@ bool CfgCmd(char *inbuffer)
 {
 	int address = 18;
 	char comanda[7];
+	//char *argv;
 	int8_t i;
+
+	//argv = strtok(inbuffer, " ");
 
 	for (i = 0; i < 25; ++i)
 	{
 		//strcpy_P(comanda, (char*) pgm_read_word(comenzi[i])); // Necessary casts and dereferencing, just copy.
 		strcpy_P(comanda, comenzi[i]);
 		if (strstr(inbuffer, comanda) != 0)
+
+		//if (strstr_P(inbuffer, comenzi[i]) != 0)
+		//if (strcasecmp_P(argv, comenzi[i]) == 0)
 		{
 
 			inbuffer += strlen(comanda) + 1;
+
+			//argv = strtok(NULL, "\n");
 			address = 18 * (1 + i);
 //#if DEBUG
 			//Serial.print("Scriu la address ");
 			Serial.print(address);
 			Serial.print(": ");
 			Serial.println(inbuffer);
+			//Serial.println(argv);
 //#endif
 			eeprom_write_block(inbuffer, (int*) address, 18);
+			//eeprom_write_block(argv, (int*) address, 18);
 			//EEPROM.updateBlock(inbuffer, address, 18);
 			return 1;
 		}
@@ -129,10 +141,11 @@ bool CfgCmd(char *inbuffer)
 }
 
 /**
- * @brief:
+ * @brief: Set the time after outs will be switch off
  *
- * @param:
- * @return:
+ * @param: no parameters
+ * @return: return true if outs will be temporize
+ * 			and false if not.
  */
 bool ToffSet()
 {
@@ -140,12 +153,12 @@ bool ToffSet()
 	time_base = 0;
 
 	ReadEprom(comanda, 18 * 25);
-	if (strstr_P(comanda, H2_OFF) != 0)
+	if (strcasecmp_P(comanda, H2_OFF) == 0)
 	{
 		time_base = 5400000;
 		return true;
 	}
-	if (strstr_P(comanda, H24_OFF) != 0)
+	if (strcasecmp_P(comanda, H12_OFF) == 0)
 	{
 		time_base = 43200000;
 		return true;
@@ -255,7 +268,7 @@ void Comand(char *nrtel, char *inmsg)
 		if (strcasecmp(buffer, inmsg) == 0)
 		{
 			digitalWrite(i, LOW);
-			time_D[i-2] = millis();
+			time_D[i - 2] = millis();
 			gsm.SendSMS(nrtel, OK);
 			return;
 		}

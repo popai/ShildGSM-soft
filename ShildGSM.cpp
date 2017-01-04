@@ -84,6 +84,9 @@ void setup()
 
 	time_off = ToffSet();
 
+	*sms_rx = 0x00;
+	*number = 0x00;
+
 	wdt_enable(WDTO_8S);
 }
 
@@ -106,7 +109,7 @@ void loop()
 				sms_rx[i] = (Serial.read()); //read data
 				i++;
 			}
-			sms_rx[i - 1] = 0;
+			sms_rx[i-1] = 0;
 
 			delay(5);
 			Serial.println(sms_rx);
@@ -119,6 +122,8 @@ void loop()
 				DellEprom();
 			else if (strlen(sms_rx) != 0)
 			{
+				//char buff[18];
+				//strcpy(buff, sms_rx);
 				if (!CfgCmd(sms_rx))
 					//Serial.println("error");
 					Comand(NULL, sms_rx);

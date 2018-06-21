@@ -34,8 +34,8 @@
 //#define DEBUG_SMS_ENABLED	1
 // pins definition
 #if defined(__AVR_ATmega328P__)
-#define softTX		A0
-#define softRX		A1
+#define softTX		A3 //A0
+#define softRX		A2 //A1
 #endif
 #if defined(__AVR_ATmega32U4__)
 #define softTX		A3

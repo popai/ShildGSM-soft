@@ -631,7 +631,7 @@ void GSM::TurnOn(long baud_rate)
 	 // default is optional
 	 }
 
-	 /*
+	
 	 p_char = strchr((char *)(comm_buf),',');
 	 p_char1 = p_char+2; // we are on the first phone number character
 	 p_char = strchr((char *)(p_char1),'"');
@@ -642,7 +642,7 @@ void GSM::TurnOn(long baud_rate)
 	 /
 
 	 delay(100);
-	 /*sprintf (buff,"AT+IPR=%f",baud_rate);
+	 sprintf (buff,"AT+IPR=%f",baud_rate);
 	 #ifdef DEBUG_PRINT
 	 // parameter 0 - because module is off so it is not necessary
 	 // to send finish AT<CR> here
@@ -1620,7 +1620,7 @@ char GSM::SendSMS(byte sim_phonebook_position, char *message_str)
  return (ret_val);
  }
 
- /**********************************************************
+**********************************************************
  Method finds out if there is present at least one SMS with
  specified status
 

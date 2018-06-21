@@ -522,14 +522,11 @@ void static StareIN(char *nrtel)
 	if (strlen(buffer) != 0)
 	{
 		if (digitalRead(inD1) == LOW)
-		{
 			{
 				strcat(mesage, buffer);
 				strcat_P(mesage, PSTR(" on \r\n"));
 				//strcat_P(mesage, PSTR("\r\n"));
 			}
-
-		}
 		else
 		{
 			strcat(mesage, buffer);
@@ -542,14 +539,11 @@ void static StareIN(char *nrtel)
 	if (strlen(buffer) != 0)
 	{
 		if (digitalRead(inD2) == LOW)
-		{
 			{
 				strcat(mesage, buffer);
 				strcat_P(mesage, PSTR(" on \r\n"));
 				//strcat_P(mesage, PSTR("\r\n"));
 			}
-
-		}
 		else
 		{
 			strcat(mesage, buffer);
@@ -562,12 +556,9 @@ void static StareIN(char *nrtel)
 	{
 		if (digitalRead(inD3) == LOW)
 		{
-			{
 				strcat(mesage, buffer);
 				strcat_P(mesage, PSTR(" on \r\n"));
 				//strcat_P(mesage, PSTR("\r\n"));
-			}
-
 		}
 		else
 		{
